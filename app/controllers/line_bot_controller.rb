@@ -60,7 +60,7 @@ class LineBotController < ApplicationController
     end
   end
 
-  # カルーセルコンテナ
+  # カルーセルコンテナ(バブルコンテナの集まり)
   def set_carousel(hotels) # hotelsは楽天APIから受け取ったホテル情報
     bubbles = []
     hotels.each do |hotel|
@@ -69,6 +69,140 @@ class LineBotController < ApplicationController
     {
       type: 'carousel',
       contents: bubbles
+    }
+  end
+
+  # バブルコンテナ(単体コンテナ)
+  def set_bubble(hotel)
+    {
+      type: 'bubble',
+      hero: set_hero(hotel),
+      body: set_body(hotel),
+      footer: set_footer(hotel)
+    }
+  end
+
+
+  # 各コンテナのヒーローブロック(ホテルの画像とそのリンク)
+  def set_hero(hotel)
+    {
+      type: 'image',
+      url: hotel['hotelImageUrl'],
+      size: 'full',
+      aspectRatio: '20:13',
+      aspectMode: 'cover',
+      action: {
+        type: 'uri',
+        uri:  hotel['hotelInformationUrl']
+      }
+    }
+  end
+
+  # 各コンテナのボディブロック(住所や料金)
+  def set_body(hotel)
+    {
+      type: 'box',
+      layout: 'vertical',
+      contents: [
+        {
+          type: 'text',
+          text: hotel['hotelName'],
+          wrap: true,
+          weight: 'bold',
+          size: 'md'
+        },
+        {
+          type: 'box',
+          layout: 'vertical',
+          margin: 'lg',
+          spacing: 'sm',
+          contents: [
+            {
+              type: 'box',
+              layout: 'baseline',
+              spacing: 'sm',
+              contents: [
+                {
+                  type: 'text',
+                  text: '住所',
+                  color: '#aaaaaa',
+                  size: 'sm',
+                  flex: 1
+                },
+                {
+                  type: 'text',
+                  text: hotel['address1'] + hotel['address2'],
+                  wrap: true,
+                  color: '#666666',
+                  size: 'sm',
+                  flex: 5
+                }
+              ]
+            },
+            {
+              type: 'box',
+              layout: 'baseline',
+              spacing: 'sm',
+              contents: [
+                {
+                  type: 'text',
+                  text: '料金',
+                  color: '#aaaaaa',
+                  size: 'sm',
+                  flex: 1
+                },
+                {
+                  type: 'text',
+                  # 最安値料金を¥0,000〜というフォーマットで表示
+                  text: '￥' + hotel['hotelMinCharge'].to_s(:delimited) + '〜',
+                  wrap: true,
+                  color: '#666666',
+                  size: 'sm',
+                  flex: 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  end
+
+  # 各コンテナのフッターブロック(電話番号や住所)
+  def set_footer(hotel)
+    {
+      type: 'box',
+      layout: 'vertical',
+      spacing: 'sm',
+      contents: [
+        {
+          type: 'button',
+          style: 'link',
+          height: 'sm',
+          action: {
+            type: 'uri',
+            label: '電話する',
+            # 電話番号
+            uri: 'tel:' + hotel['telephoneNo']
+          }
+        },
+        {
+          type: 'button',
+          style: 'link',
+          height: 'sm',
+          action: {
+            type: 'uri',
+            label: '地図を見る',
+            # 住所(緯度と経度を取得して文字列に変換してGoogleマップのURLに結合)
+            uri: 'https://www.google.com/maps?q=' + hotel['latitude'].to_s + ',' + hotel['longitude'].to_s
+          }
+        },
+        {
+          type: 'spacer',
+          size: 'sm'
+        }
+      ],
+      flex: 0
     }
   end
 end
