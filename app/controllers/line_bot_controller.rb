@@ -23,8 +23,8 @@ class LineBotController < ApplicationController
 
   private
 
-  # Line::Bot::Clientクラスをインスタンス化することでメッセージの解析や返信などの機能を使うことができるようになる
   def client
+    # Line::Bot::Clientクラスをインスタンス化することでメッセージの解析や返信などの機能を使うことができるようになる
     @client ||= Line::Bot::Client.new { |config|
       config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
       config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
@@ -58,5 +58,17 @@ class LineBotController < ApplicationController
         contents: set_carousel(response['hotels'])
       }
     end
+  end
+
+  # カルーセルコンテナ
+  def set_carousel(hotels) # hotelsは楽天APIから受け取ったホテル情報
+    bubbles = []
+    hotels.each do |hotel|
+      bubbles.push set_bubble(hotel[0]['hotelBasicInfo'])
+    end
+    {
+      type: 'carousel',
+      contents: bubbles
+    }
   end
 end
