@@ -39,6 +39,7 @@ class LineBotController < ApplicationController
       'applicationId' => ENV['RAKUTEN_APPID'],
       'hits' => 5,
       'responseType' => 'small',
+      'datumType' => 1,
       'formatVersion' => 2
     }
     response = http_client.get(url, query)
