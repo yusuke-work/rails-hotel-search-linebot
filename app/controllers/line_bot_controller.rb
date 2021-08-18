@@ -38,7 +38,7 @@ class LineBotController < ApplicationController
       end
     end
     #正常を意味するステータスコード200を返す
-    head :ok
+    # head :ok
   end
 
   private
