@@ -58,8 +58,9 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'line-bot-api'
 
+# .env
 gem 'dotenv-rails'
-
+# 楽天APIと通信するため
 gem 'httpclient'
 
 group :production do

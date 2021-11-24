@@ -101,7 +101,7 @@ class LineBotController < ApplicationController
     end
   end
 
-  # カルーセルコンテナ(バブルコンテナの集まり)
+  # カルーセルコンテナ(バブルコンテナの集まり)(出力したいものを決める)
   def set_carousel(hotels) # hotelsは楽天APIから受け取ったホテル情報の集まり
     # バブルコンテナの配列
     # 各ホテル情報(hotel[0]['hotelBasicInfo'])をset_bubbleに渡して作成されたバブルコンテナをpushでbubblesの末尾に追加
